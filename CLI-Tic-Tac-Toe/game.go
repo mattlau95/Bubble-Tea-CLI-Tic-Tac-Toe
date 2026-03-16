@@ -32,23 +32,33 @@ func PlayGame() {
 		var row int
 		var col int
 
-		var move string
+		if currentPlayer == "X" {
 
-		fmt.Print("Enter move (example B2): ")
-		fmt.Scan(&move)
+			var move string
 
-		row, col, ok := ParseMove(move)
+			fmt.Print("Enter move (example B2): ")
+			fmt.Scan(&move)
 
-		if !ok {
-			fmt.Println("Invalid input. Use format like A1 or C3.")
-			continue
-		}
+			var ok bool
+			row, col, ok = ParseMove(move)
 
-		validMove := MakeMove(&board, row, col, currentPlayer)
+			if !ok {
+				fmt.Println("Invalid input.")
+				continue
+			}
 
-		if !validMove {
-			fmt.Println("Invalid move! Try again.")
-			continue
+			if !MakeMove(&board, row, col, currentPlayer) {
+				fmt.Println("That space is taken.")
+				continue
+			}
+
+		} else {
+
+			row, col = RandomMove(board)
+
+			fmt.Println("CPU chooses:", row, col)
+
+			MakeMove(&board, row, col, currentPlayer)
 		}
 
 		winner := CheckWinner(board)
