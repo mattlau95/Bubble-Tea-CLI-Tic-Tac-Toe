@@ -118,3 +118,10 @@ func GetAvailableMoves(board Board) [][2]int {
 
 	return moves
 }
+
+func CopyBoard(board Board) Board {
+
+	newBoard := board
+
+	return newBoard
+}

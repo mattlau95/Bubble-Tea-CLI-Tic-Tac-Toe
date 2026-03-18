@@ -5,6 +5,14 @@ import (
 	"strings"
 )
 
+type Difficulty int
+
+const (
+	Easy Difficulty = iota
+	Medium
+	Hard
+)
+
 func ParseMove(input string) (int, int, bool) {
 
 	if len(input) != 2 {
@@ -25,6 +33,8 @@ func PlayGame() {
 
 	board := CreateBoard()
 	currentPlayer := "X"
+
+	difficulty := SelectDifficulty()
 
 	for {
 
@@ -56,9 +66,16 @@ func PlayGame() {
 
 		} else {
 
-			row, col = RandomMove(board)
+			switch difficulty {
+			case Easy:
+				row, col = RandomMove(board)
+			case Medium:
+				row, col = MediumMove(board)
+			case Hard:
+				row, col = BestMove(board)
+			}
 
-			fmt.Println("CPU chooses:", toBoardCoord(row, col))
+			fmt.Println("CPU plays", FormatMove(row, col))
 
 			MakeMove(&board, row, col, currentPlayer)
 		}
@@ -95,4 +112,33 @@ func toBoardCoord(row, col int) string {
     
     // Format into a single string
     return fmt.Sprintf("%s%d", columnLetter, rowNumber)
+}
+
+func SelectDifficulty() Difficulty {
+
+	var choice int
+
+	fmt.Println("Select Difficulty:")
+	fmt.Println("1 - Easy")
+	fmt.Println("2 - Medium")
+	fmt.Println("3 - Hard")
+	fmt.Print("Enter choice: ")
+
+	fmt.Scan(&choice)
+
+	switch choice {
+	case 1:
+		return Easy
+	case 2:
+		return Medium
+	case 3:
+		return Hard
+	default:
+		fmt.Println("Invalid choice, defaulting to Medium.")
+		return Medium
+	}
+}
+
+func FormatMove(row, col int) string {
+	return fmt.Sprintf("%c%d", 'A'+row, col+1)
 }
