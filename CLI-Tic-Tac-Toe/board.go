@@ -103,3 +103,18 @@ func IsBoardFull(board Board) bool {
 	
 	return true
 }
+
+func GetAvailableMoves(board Board) [][2]int {
+
+	var moves [][2]int
+
+	for r := 0; r < 3; r++ {
+		for c := 0; c < 3; c++ {
+			if board[r][c] == " " {
+				moves = append(moves, [2]int{r, c})
+			}
+		}
+	}
+
+	return moves
+}
