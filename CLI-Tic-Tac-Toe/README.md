@@ -1,76 +1,59 @@
-# CLI Tic-Tac-Toe (Go)
+# Tic-Tac-Toe TUI (Go)
 
-A terminal-based Tic-Tac-Toe game built in Go with a focus on clean architecture, intuitive CLI UX, and progressively smarter AI opponents.
+An interactive, event-driven Terminal User Interface (TUI) for Tic-Tac-Toe. Built with Go and the Bubble Tea framework, featuring a recursive Minimax AI with Alpha-Beta pruning.
 
-This project is part of my effort to strengthen my backend engineering and systems programming skills while designing polished terminal interfaces.
+This project demonstrates a shift from procedural CLI logic to a functional, state-based architecture (Model-View-Update), providing a much smoother and more modern terminal experience.
 
 ## Features
 
-* Playable Tic-Tac-Toe game in the terminal
-* Labeled board for intuitive input (A1, B2, C3)
-* Input validation and error handling
-* Turn-based player system
-* Win and draw detection
-* Clean modular architecture
+* Interactive TUI: Navigate the board using Arrow Keys and select your move with Enter.
+* Async AI Thinking: The UI remains responsive with a "CPU thinking..." status while the Minimax algorithm runs in the background.
+* Three Difficulty Levels:
+    * Easy: CPU makes entirely random moves.
+    * Medium: CPU looks one move ahead to prioritize winning or blocking the player.
+    * Hard: Uses a Minimax Algorithm with Alpha-Beta Pruning for unbeatable, optimal play.
+* Clean Visuals: Labeled rows (A-C) and columns (1-3) with active cursor highlighting.
 
-## Example Board
+## Example UI
 
-```
-    1   2   3
-A   X | O |  
-   ---+---+---
-B     | X |  
-   ---+---+---
-C   O |   | X
-```
+     1   2   3
+ A  [X]| . | O 
+    ---+---+---
+ B   . | O | . 
+    ---+---+---
+ C   . | . | X 
 
-Players enter moves using coordinates:
+CPU thinking...
 
-```
-A1
-B2
-C3
-```
+Use arrow keys + Enter | q to quit
 
 ## How to Run
 
-Clone the repository and run:
+1. Prerequisites: Ensure you have Go 1.18 or higher installed.
+2. Initialize & Install Dependencies: run 'go mod tidy'
+3. Run the Game: run 'go run .'
 
-```
-go run .
-```
+## Project Architecture
 
-## How to Play
+The project follows a modular design to ensure a strict separation of concerns:
 
-1. The board is labeled with rows (A–C) and columns (1–3)
-2. Players take turns entering coordinates
-3. First player to align three marks wins
-4. If the board fills without a winner, the game is a draw
+- main.go: Entry point; initializes the Bubble Tea program and terminal loop.
+- ui.go: The TUI Controller. Manages state transitions, keyboard input, and rendering.
+- ai.go: The AI Engine. Contains Random, Heuristic (Medium), and Minimax (Hard) logic.
+- board.go: The Data Model. Handles the 3x3 board state and win/draw detection logic.
+- game.go: Shared Definitions. Contains difficulty constants and coordinate parsing.
 
-## Project Structure
+## Technical Highlights
 
-```
-CLI-Tic-Tac-Toe/
-│
-├── main.go      # program entry point
-├── board.go     # board state and operations
-├── game.go      # game loop and player interaction
-└── ai.go        # CPU player logic (coming soon)
-```
+* Minimax Optimization: Implemented Alpha-Beta pruning to significantly reduce the search space, ensuring the "Hard" mode is fast and impossible to beat.
+* Elm Architecture: Utilizes the Bubble Tea framework's Model-View-Update pattern for predictable state management.
+* Non-Blocking I/O: Leverages Go's concurrency model via tea.Cmd to perform AI calculations without freezing the user interface.
 
-## Future Improvements
+## Future Roadmap
 
-* CPU opponent with multiple difficulty levels
-* Minimax AI (unbeatable mode)
-* Terminal UI enhancements
-* Game statistics tracking
-* Watch CPU vs CPU mode
+- [ ] Lip Gloss Integration: Add colors (Blue for X, Red for O) and stylish borders.
+- [ ] Score Tracking: Add a persistent session counter for Wins, Losses, and Draws.
+- [ ] Multiplayer: Local hot-seat mode for two human players.
 
-## Learning Goals
-
-This project focuses on:
-
-* Writing idiomatic Go
-* Designing clean CLI interfaces
-* Implementing classic algorithms (Minimax)
-* Structuring maintainable software projects
+---
+Developed as a deep dive into idiomatic Go and TUI design.

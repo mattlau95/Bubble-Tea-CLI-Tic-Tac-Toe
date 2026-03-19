@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"math/rand"
 	"time"
 )
 
 func RandomMove(board Board) (int, int) {
-	delay(2)
+	//delay(2)
 	rand.Seed(time.Now().UnixNano())
 	for {
 
@@ -22,7 +22,7 @@ func RandomMove(board Board) (int, int) {
 
 func MediumMove(board Board) (int, int) {
 
-	delay(3)
+	//delay(3)
 
 	// 1. Try to win
 	moves := GetAvailableMoves(board)
@@ -55,12 +55,12 @@ func MediumMove(board Board) (int, int) {
 }
 
 func delay(seconds int) {
-	fmt.Println("CPU is thinking...")
+	//m.message = "CPU is thinking..."
     
 	// Cast seconds to time.Duration to allow multiplication
 	time.Sleep(time.Duration(seconds) * time.Second)
     
-	fmt.Println("Got it!")
+  //	fmt.Println("Got it!")
 }
 
 func Minimax(board Board, depth int, isMaximizing bool, alpha int, beta int) int {
