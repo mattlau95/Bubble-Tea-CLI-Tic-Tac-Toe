@@ -16,14 +16,12 @@ var (
 	titleStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF00")).Underline(true).Bold(true)
 	msgStyle    = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("#AAAAAA"))
 	
-	// Stats Styling
 	statsStyle = lipgloss.NewStyle().
 			Border(lipgloss.NormalBorder(), false, false, false, true).
 			BorderForeground(lipgloss.Color("#3C3C3C")).
 			PaddingLeft(2).
 			MarginTop(1)
 
-	// Transition Border for Game Over
 	gameOverBox = lipgloss.NewStyle().
 			Border(lipgloss.RoundedBorder()).
 			BorderForeground(lipgloss.Color("#FFD700")).
@@ -56,8 +54,8 @@ type model struct {
 	gameOver      bool
 	difficulty    Difficulty
 	state         sessionState
+	userGoesFirst bool // New Toggle
 
-	// Stats & Animation State
 	stats      stats
 	frame      int
 	isThinking bool
@@ -70,6 +68,7 @@ func initialModel() model {
 		message:       "Your move",
 		state:         stateSelectDifficulty,
 		stats:         stats{0, 0, 0},
+		userGoesFirst: true, // Default to player first
 	}
 }
 
@@ -84,20 +83,33 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	// Global Quit
 	if key, ok := msg.(tea.KeyMsg); ok {
 		if key.String() == "q" || key.String() == "ctrl+c" {
 			return m, tea.Quit
 		}
 	}
 
-	// 1. Difficulty Selection
+	// 1. Difficulty & Turn Selection
 	if m.state == stateSelectDifficulty {
 		if msg, ok := msg.(tea.KeyMsg); ok {
 			switch msg.String() {
-			case "1": m.difficulty, m.state = Easy, statePlaying
-			case "2": m.difficulty, m.state = Medium, statePlaying
-			case "3": m.difficulty, m.state = Hard, statePlaying
+			case "f":
+				m.userGoesFirst = !m.userGoesFirst
+			case "1", "2", "3":
+				// Set Difficulty
+				switch msg.String() {
+				case "1": m.difficulty = Easy
+				case "2": m.difficulty = Medium
+				case "3": m.difficulty = Hard
+				}
+				
+				m.state = statePlaying
+				// Handle CPU going first
+				if !m.userGoesFirst {
+					m.currentPlayer = "O"
+					m.message = "CPU thinking..."
+					return m, tea.Batch(tickCmd(), cpuMoveCmd(m.board, m.difficulty))
+				}
 			}
 		}
 		return m, nil
@@ -130,9 +142,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if msg.String() == "r" {
 				m.board = CreateBoard()
 				m.gameOver = false
-				m.currentPlayer = "X"
-				m.message = "Rematch! Your move"
-				return m, nil
+				m.message = "Rematch!"
+				
+				if m.userGoesFirst {
+					m.currentPlayer = "X"
+					return m, nil
+				} else {
+					m.currentPlayer = "O"
+					m.message = "CPU thinking..."
+					return m, tea.Batch(tickCmd(), cpuMoveCmd(m.board, m.difficulty))
+				}
 			}
 			return m, nil
 		}
@@ -170,17 +189,22 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	if m.state == stateSelectDifficulty {
+		firstPlayer := "Player (X)"
+		if !m.userGoesFirst {
+			firstPlayer = "CPU (O)"
+		}
+
 		return "\n  " + titleStyle.Render("TIC-TAC-TOE") + "\n\n" +
 			"  Select Difficulty:\n" +
 			"  1. Easy\n" +
 			"  2. Medium\n" +
 			"  3. Hard\n\n" +
+			"  Options:\n" +
+			fmt.Sprintf("  [f] First Move: %s\n\n", firstPlayer) +
 			msgStyle.Render("Press a number to start...")
 	}
 
 	boardView := m.renderBoard()
-	
-	// Create Scoreboard
 	scoreboard := statsStyle.Render(fmt.Sprintf(
 		"Wins: %d | Losses: %d | Draws: %d",
 		m.stats.wins, m.stats.losses, m.stats.draws,
@@ -246,7 +270,6 @@ func diffToString(d Difficulty) string {
 
 func cpuMoveCmd(board Board, diff Difficulty) tea.Cmd {
 	return func() tea.Msg {
-		// Artificial thinking time to let the user see the animation
 		time.Sleep(1200 * time.Millisecond) 
 		var row, col int
 		switch diff {

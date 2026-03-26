@@ -1,87 +1,60 @@
 # Tic-Tac-Toe TUI (Go)
 
-An interactive, event-driven Terminal User Interface (TUI) for Tic-Tac-Toe. Built with **Go**, the **Bubble Tea** framework, and **Lip Gloss** for styling. This project features a recursive Minimax AI with Alpha-Beta pruning, ensuring an unbeatable "Hard" mode.
+An interactive, event-driven Terminal User Interface (TUI) for Tic-Tac-Toe. Built with Go, the Bubble Tea framework, and Lip Gloss for styling. This project features a recursive Minimax AI with Alpha-Beta pruning, ensuring an unbeatable "Hard" mode.
 
-This project demonstrates a shift from procedural CLI logic to a functional, state-based architecture (Model-View-Update), providing a polished and responsive terminal experience.
+This version moves beyond a simple CLI by implementing a full state machine, real-time animations, and persistent session statistics.
 
 ## 🕹️ Features
 
-* **Interactive TUI:** Navigate the board using **Arrow Keys** and select your move with **Enter**.
-* **Difficulty Selection:** A dedicated start screen to choose between Easy, Medium, and Hard modes.
-* **Async AI Thinking:** The UI remains responsive with a "CPU thinking..." status while the Minimax algorithm runs in the background via `tea.Cmd`.
-* **Rich Styling:** Powered by **Lip Gloss**, featuring:
-    * **X** and **O** color coding (Blue/Red).
-    * Active cursor highlighting with background tints.
-    * Bold titles and italicized status messages.
+* Interactive Navigation: Use Arrow Keys to move the cursor and Enter to place your mark.
+* Customizable Turn Order: Press [f] on the menu to toggle between Player (X) or CPU (O) going first.
+* Three AI Difficulty Levels:
+    - Easy: Random move selection.
+    - Medium: Heuristic-based (prioritizes immediate wins/blocks).
+    - Hard: Unbeatable Minimax algorithm with Alpha-Beta pruning.
+* Live Animations: A tick-based "Thinking..." animation for the CPU to mimic human reaction time.
+* Session Statistics: Persistent tracking of Wins, Losses, and Draws during your session.
+* Seamless Rematch: Press [r] after a game ends to instantly clear the board and play again without restarting.
 
 ## 📸 Example UI
 
      TIC-TAC-TOE
 
      1   2   3
- A  [X]| . | O 
+ A   X | . | O 
     ---+---+---
- B   . | O | . 
+ B   . |[O]| . 
     ---+---+---
  C   . | . | X 
 
-CPU thinking... (Hard)
+CPU is thinking... (Hard)
 
-Use arrow keys + Enter | q to quit
+Wins: 2 | Losses: 1 | Draws: 4
+
+Use arrows + Enter | q to quit
 
 ## 🚀 How to Run
 
-1.  **Prerequisites:** Ensure you have Go 1.18 or higher installed.
-2.  **Initialize & Install Dependencies:**
-    ```bash
-    go mod tidy
-    ```
-3.  **Run the Game:**
-    ```bash
-    go run .
-    ```
+1. Prerequisites: Ensure you have Go 1.18+ installed.
+2. Initialize & Install Dependencies: Run 'go mod tidy'
+3. Run the Game: Run 'go run .'
 
 ## 🏗️ Project Architecture
 
-The project is designed with a strict separation of concerns, ensuring the AI logic, board state, and user interface remain modular and maintainable.
-
 | Component | File | Responsibility |
 | :--- | :--- | :--- |
-| **Entry Point** | `main.go` | Initializes the Bubble Tea program and terminal loop. |
-| **Controller** | `ui.go` | Manages state transitions, keyboard input, and TUI rendering. |
-| **AI Engine** | `ai.go` | Contains Random, Heuristic (Medium), and Minimax (Hard) logic. |
-| **Data Model** | `board.go` | Handles the 3x3 board state and win/draw detection. |
-| **Definitions** | `game.go` | Stores shared difficulty constants and coordinate parsing. |
+| Entry Point | main.go | Initializes the Bubble Tea program loop. |
+| Controller | ui.go | Manages TUI state, Lip Gloss styles, and animations. |
+| AI Engine | ai.go | Contains the Minimax and Random move logic. |
+| Data Model | board.go | Handles the 3x3 board state and win detection. |
+| Definitions | game.go | Shared constants and difficulty enums. |
 
 ## 🧠 Technical Highlights
 
-* **The Elm Architecture:** Utilizes Bubble Tea’s **Model-View-Update** pattern for predictable state management.
-* **Lip Gloss Styling:** Uses a declarative styling approach to wrap strings in ANSI escape codes, ensuring cross-terminal compatibility for colors and layouts.
-* **Minimax Optimization:** Implemented Alpha-Beta pruning to significantly reduce the search space, making the AI both fast and unbeatable.
-* **Non-Blocking I/O:** Leverages Go's concurrency model to perform heavy AI calculations without freezing the main UI thread.
-
-Styling: 
-Colors!: X is now blue and O is red.
-
-The Cursor: Instead of plain brackets [ ], the entire cell now highlights with a background color using cursorStyle.
-
-Visual Hierarchy: Added a titleStyle for the menu and a msgStyle for status updates to make the text easier to scan.
-
-Clean Code: Used Render() to wrap strings in ANSI escape codes, ensuring they display correctly in any modern terminal.
-
-
-Animations and Transitions
-The Pulse: The tickCmd sends a message every 250ms. The Update function catches it and increments m.frame, which the View uses to draw "CPU thinking.", "CPU thinking..", etc.
-
-The Transition: When m.gameOver hits, the View switches to a gameOverBox. This puts a gold-rounded border around the final state of the board, visually separating the "end screen" from the gameplay.
-
-Artificial Latency: I added a time.Sleep(1200 * time.Millisecond) inside cpuMoveCmd. Since it's inside a tea.Cmd, it won't freeze your UI, but it gives the user enough time to actually see the "Thinking..." animation.
-
-## 🛠️ Future Roadmap
-
-- [ ] **Game Statistics:** Add a persistent session counter for Wins, Losses, and Draws.
-- [ ] **Multiplayer:** Local hot-seat mode for two human players.
-- [ ] **Animations:** Explore the `bubbles` package for simple timer or transition effects.
+* Model-View-Update (MVU): Leveraging the Elm Architecture via Bubble Tea for predictable UI state transitions.
+* Non-Blocking I/O: Using tea.Cmd and tea.Tick to handle background AI calculations and real-time UI updates simultaneously.
+* Declarative Styling: Using Lip Gloss to define reusable UI components with ANSI colors and borders.
+* Algorithm Efficiency: Minimax with Alpha-Beta pruning ensures the CPU plays optimally without high latency.
 
 ---
-*Developed as a deep dive into idiomatic Go and modern TUI design.*
+Developed as a deep dive into idiomatic Go and modern TUI design.
