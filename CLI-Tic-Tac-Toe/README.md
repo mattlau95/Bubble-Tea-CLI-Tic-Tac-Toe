@@ -60,6 +60,23 @@ The project is designed with a strict separation of concerns, ensuring the AI lo
 * **Minimax Optimization:** Implemented Alpha-Beta pruning to significantly reduce the search space, making the AI both fast and unbeatable.
 * **Non-Blocking I/O:** Leverages Go's concurrency model to perform heavy AI calculations without freezing the main UI thread.
 
+Styling: 
+Colors!: X is now blue and O is red.
+
+The Cursor: Instead of plain brackets [ ], the entire cell now highlights with a background color using cursorStyle.
+
+Visual Hierarchy: Added a titleStyle for the menu and a msgStyle for status updates to make the text easier to scan.
+
+Clean Code: Used Render() to wrap strings in ANSI escape codes, ensuring they display correctly in any modern terminal.
+
+
+Animations and Transitions
+The Pulse: The tickCmd sends a message every 250ms. The Update function catches it and increments m.frame, which the View uses to draw "CPU thinking.", "CPU thinking..", etc.
+
+The Transition: When m.gameOver hits, the View switches to a gameOverBox. This puts a gold-rounded border around the final state of the board, visually separating the "end screen" from the gameplay.
+
+Artificial Latency: I added a time.Sleep(1200 * time.Millisecond) inside cpuMoveCmd. Since it's inside a tea.Cmd, it won't freeze your UI, but it gives the user enough time to actually see the "Thinking..." animation.
+
 ## 🛠️ Future Roadmap
 
 - [ ] **Game Statistics:** Add a persistent session counter for Wins, Losses, and Draws.
