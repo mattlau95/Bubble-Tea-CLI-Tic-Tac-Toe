@@ -51,10 +51,20 @@ Use arrows + Enter | q to quit
 
 ## 🧠 Technical Highlights
 
-* Model-View-Update (MVU): Leveraging the Elm Architecture via Bubble Tea for predictable UI state transitions.
-* Non-Blocking I/O: Using tea.Cmd and tea.Tick to handle background AI calculations and real-time UI updates simultaneously.
-* Declarative Styling: Using Lip Gloss to define reusable UI components with ANSI colors and borders.
-* Algorithm Efficiency: Minimax with Alpha-Beta pruning ensures the CPU plays optimally without high latency.
+* The Elm Architecture (MVU):
+  The application follows the Model-View-Update pattern. This ensures a unidirectional data flow where the View is a pure function of the Model. By separating the state from the rendering logic, the TUI remains bug-free and easy to extend with new features like "Rematch" or "Statistics."
+
+* Concurrent AI & Non-Blocking I/O:
+  Heavy AI computations (Minimax) are offloaded into Bubble Tea "Commands" (tea.Cmd). This leverages Go's goroutines to calculate the best move in the background, allowing the UI to stay responsive and play "Thinking..." animations at a consistent frame rate without blocking the main execution thread.
+
+* Optimized Minimax with Alpha-Beta Pruning:
+  The "Hard" AI uses a recursive search to evaluate all possible board outcomes. To prevent performance lag, Alpha-Beta pruning is implemented to "cut off" branches in the search tree that cannot possibly influence the final decision, drastically reducing the number of nodes evaluated.
+
+* Declarative CSS-like Styling:
+  Using the Lip Gloss library, UI components are styled using a functional, declarative approach. This allows for complex layouts, borders, and ANSI color highlights (X in Blue, O in Red) that adapt gracefully to different terminal themes and sizes.
+
+* Real-Time State Management:
+  A custom tick-based system triggers periodic messages to the update loop. This facilitates real-time UI elements, such as the animated loading dots during the CPU's turn, making the terminal application feel fluid and modern.
 
 ---
 Developed as a deep dive into idiomatic Go and modern TUI design.
