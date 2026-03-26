@@ -1,20 +1,22 @@
 # Tic-Tac-Toe TUI (Go)
 
-An interactive, event-driven Terminal User Interface (TUI) for Tic-Tac-Toe. Built with Go and the Bubble Tea framework, featuring a recursive Minimax AI with Alpha-Beta pruning.
+An interactive, event-driven Terminal User Interface (TUI) for Tic-Tac-Toe. Built with **Go**, the **Bubble Tea** framework, and **Lip Gloss** for styling. This project features a recursive Minimax AI with Alpha-Beta pruning, ensuring an unbeatable "Hard" mode.
 
-This project demonstrates a shift from procedural CLI logic to a functional, state-based architecture (Model-View-Update), providing a much smoother and more modern terminal experience.
+This project demonstrates a shift from procedural CLI logic to a functional, state-based architecture (Model-View-Update), providing a polished and responsive terminal experience.
 
-## Features
+## 🕹️ Features
 
-* Interactive TUI: Navigate the board using Arrow Keys and select your move with Enter.
-* Async AI Thinking: The UI remains responsive with a "CPU thinking..." status while the Minimax algorithm runs in the background.
-* Three Difficulty Levels:
-    * Easy: CPU makes entirely random moves.
-    * Medium: CPU looks one move ahead to prioritize winning or blocking the player.
-    * Hard: Uses a Minimax Algorithm with Alpha-Beta Pruning for unbeatable, optimal play.
-* Clean Visuals: Labeled rows (A-C) and columns (1-3) with active cursor highlighting.
+* **Interactive TUI:** Navigate the board using **Arrow Keys** and select your move with **Enter**.
+* **Difficulty Selection:** A dedicated start screen to choose between Easy, Medium, and Hard modes.
+* **Async AI Thinking:** The UI remains responsive with a "CPU thinking..." status while the Minimax algorithm runs in the background via `tea.Cmd`.
+* **Rich Styling:** Powered by **Lip Gloss**, featuring:
+    * **X** and **O** color coding (Blue/Red).
+    * Active cursor highlighting with background tints.
+    * Bold titles and italicized status messages.
 
-## Example UI
+## 📸 Example UI
+
+     TIC-TAC-TOE
 
      1   2   3
  A  [X]| . | O 
@@ -23,37 +25,46 @@ This project demonstrates a shift from procedural CLI logic to a functional, sta
     ---+---+---
  C   . | . | X 
 
-CPU thinking...
+CPU thinking... (Hard)
 
 Use arrow keys + Enter | q to quit
 
-## How to Run
+## 🚀 How to Run
 
-1. Prerequisites: Ensure you have Go 1.18 or higher installed.
-2. Initialize & Install Dependencies: run 'go mod tidy'
-3. Run the Game: run 'go run .'
+1.  **Prerequisites:** Ensure you have Go 1.18 or higher installed.
+2.  **Initialize & Install Dependencies:**
+    ```bash
+    go mod tidy
+    ```
+3.  **Run the Game:**
+    ```bash
+    go run .
+    ```
 
-## Project Architecture
+## 🏗️ Project Architecture
 
-The project follows a modular design to ensure a strict separation of concerns:
+The project is designed with a strict separation of concerns, ensuring the AI logic, board state, and user interface remain modular and maintainable.
 
-- main.go: Entry point; initializes the Bubble Tea program and terminal loop.
-- ui.go: The TUI Controller. Manages state transitions, keyboard input, and rendering.
-- ai.go: The AI Engine. Contains Random, Heuristic (Medium), and Minimax (Hard) logic.
-- board.go: The Data Model. Handles the 3x3 board state and win/draw detection logic.
-- game.go: Shared Definitions. Contains difficulty constants and coordinate parsing.
+| Component | File | Responsibility |
+| :--- | :--- | :--- |
+| **Entry Point** | `main.go` | Initializes the Bubble Tea program and terminal loop. |
+| **Controller** | `ui.go` | Manages state transitions, keyboard input, and TUI rendering. |
+| **AI Engine** | `ai.go` | Contains Random, Heuristic (Medium), and Minimax (Hard) logic. |
+| **Data Model** | `board.go` | Handles the 3x3 board state and win/draw detection. |
+| **Definitions** | `game.go` | Stores shared difficulty constants and coordinate parsing. |
 
-## Technical Highlights
+## 🧠 Technical Highlights
 
-* Minimax Optimization: Implemented Alpha-Beta pruning to significantly reduce the search space, ensuring the "Hard" mode is fast and impossible to beat.
-* Elm Architecture: Utilizes the Bubble Tea framework's Model-View-Update pattern for predictable state management.
-* Non-Blocking I/O: Leverages Go's concurrency model via tea.Cmd to perform AI calculations without freezing the user interface.
+* **The Elm Architecture:** Utilizes Bubble Tea’s **Model-View-Update** pattern for predictable state management.
+* **Lip Gloss Styling:** Uses a declarative styling approach to wrap strings in ANSI escape codes, ensuring cross-terminal compatibility for colors and layouts.
+* **Minimax Optimization:** Implemented Alpha-Beta pruning to significantly reduce the search space, making the AI both fast and unbeatable.
+* **Non-Blocking I/O:** Leverages Go's concurrency model to perform heavy AI calculations without freezing the main UI thread.
 
-## Future Roadmap
+## 🛠️ Future Roadmap
 
-- [ ] Lip Gloss Integration: Add colors (Blue for X, Red for O) and stylish borders.
-- [ ] Score Tracking: Add a persistent session counter for Wins, Losses, and Draws.
-- [ ] Multiplayer: Local hot-seat mode for two human players.
+- [ ] **Game Statistics:** Add a persistent session counter for Wins, Losses, and Draws.
+- [ ] **Multiplayer:** Local hot-seat mode for two human players.
+- [ ] **Animations:** Explore the `bubbles` package for simple timer or transition effects.
 
 ---
-Developed as a deep dive into idiomatic Go and TUI design.
+*Developed as a deep dive into idiomatic Go and modern TUI design.*
